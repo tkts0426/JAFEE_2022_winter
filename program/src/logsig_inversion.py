@@ -112,5 +112,3 @@ def train(sig, order, n_iterations, n_organisms, n_points, pip, n_pips,
             break
 
     return population.fittest(sig, p=top_p, order=order)[0].path[::2, 1], loss
-
-        

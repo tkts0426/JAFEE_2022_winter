@@ -90,7 +90,6 @@ class CVAE(nn.Module):
         randoms = torch.from_numpy(randoms.astype(np.float64)).clone()
         samples = self.decoder(randoms, cond)
 
-
         return samples
 
     # ここは直接セルに打ち込んでいってもいいかもしれない
