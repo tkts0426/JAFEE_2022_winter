@@ -73,26 +73,40 @@ class CVAE(nn.Module):
         decode = self.decoder(sample_z, cond)
 
         return mn, sd, sample_z, decode
-
-
-    def generate(self, cond, n_samples=None):
+    
+    def generate(cond, input_dim, n_latent, n_samples = None):
         if n_samples is not None:
             randoms = []
             for i in range(n_samples):
-                random = np.random.normal(0, 1, size=(1, self.n_latent))
+                random = np.random.normal(0, 1, size=(1, n_latent))
                 randoms.append(random)
-            randoms = torch.Tensor(randoms).reshape(-1, self.n_latent)
-            cond = torch.Tensor(cond.float())            
         else:
-            randoms = np.random.normal(0, 1, size=(1, self.n_latent))
-            cond = torch.Tensor(cond.float())
-        
-        randoms = torch.from_numpy(randoms.astype(np.float64)).clone()
-        samples = self.decoder(randoms, cond)
+            randoms = np.random.normal(0, 1, size=(1, n_latent))
+            cond = torch.Tensor(cond)
 
+        randoms = torch.Tensor(randoms).reshape(-1, n_latent)
+        cond = torch.Tensor(cond.float()).reshape(-1, input_dim)
+
+        samples = generator.decoder(randoms, cond)
 
         return samples
+    
+#    def generate(self, cond, n_samples=None):
+#         if n_samples is not None:
+#             randoms = []
+#             for i in range(n_samples):
+#                 random = np.random.normal(0, 1, size=(1, self.n_latent))
+#                 randoms.append(random)
+#             randoms = torch.Tensor(randoms).reshape(-1, self.n_latent)
+#             cond = torch.Tensor(cond.float())            
+#         else:
+#             randoms = np.random.normal(0, 1, size=(1, self.n_latent))
+#             cond = torch.Tensor(cond.float())
+        
+#         randoms = torch.from_numpy(randoms.astype(np.float64)).clone()
+#         samples = self.decoder(randoms, cond)
 
+#         return samples
     # ここは直接セルに打ち込んでいってもいいかもしれない
     # def train(self, data, data_cond, n_epochs=10000, learning_rate=0.005, show_progress=False):
         
